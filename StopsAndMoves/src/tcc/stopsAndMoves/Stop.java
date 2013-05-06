@@ -1,33 +1,16 @@
 package tcc.stopsAndMoves;
 
-public class Stop {
-	static private IdGenerator idGenerator;
-	
+public class Stop {	
 	private final Trajectory trajectory;
 	private final long id;
 	private double enterTime;
 	private double leaveTime;
 	
-	public Stop(Trajectory trajectory) {
+	public Stop(Trajectory trajectory, long id) {
 		super();
 		this.trajectory = trajectory;
 		
-		this.id = generateId(trajectory.getId());
-	}
-
-	static private long generateId( long trajectoryId ) {
-		return getIdGenerator().generateId(trajectoryId);
-	}
-	
-	public static IdGenerator getIdGenerator() {
-		if ( idGenerator == null ) {
-			idGenerator = new IdGenerator();
-		}
-		return idGenerator;
-	}
-
-	public static void setIdGenerator(IdGenerator idGenerator) {
-		Stop.idGenerator = idGenerator;
+		this.id = id;
 	}
 
 	public double getEnterTime() {
@@ -53,5 +36,4 @@ public class Stop {
 	public long getId() {
 		return id;
 	}
-	
 }

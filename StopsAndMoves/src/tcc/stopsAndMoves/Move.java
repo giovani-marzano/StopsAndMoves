@@ -1,43 +1,33 @@
 package tcc.stopsAndMoves;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Move {
-	static private IdGenerator idGenerator;
-	
 	private final Trajectory trajectory;
 	private final long id; 
 	private List<SamplePoint> pointsList;
 	private Stop origin;
 	private Stop destination;
 	
-	public Move(Trajectory trajectory) {
+	public Move(Trajectory trajectory, long id) {
 		super();
 		if (trajectory == null) {
 			throw new NullPointerException("trajectory null");
 		}
 		this.trajectory = trajectory;
 		
-		this.id = generateId(trajectory.getId());
-	}
-	
-	static private long generateId( long trajectoryId ) {
-		return getIdGenerator().generateId(trajectoryId);
-	}
-	
-	public static IdGenerator getIdGenerator() {
-		if ( idGenerator == null ) {
-			idGenerator = new IdGenerator();
-		}
-		return idGenerator;
-	}
-
-	public static void setIdGenerator(IdGenerator idGenerator) {
-		Move.idGenerator = idGenerator;
+		this.id = id;
+		
+		pointsList = new ArrayList<>();
 	}
 
 	public long getId() {
 		return id;
+	}
+	
+	public void addPoint(SamplePoint p) {
+		pointsList.add(p);
 	}
 
 	public List<SamplePoint> getPointsList() {
@@ -67,5 +57,4 @@ public class Move {
 	public Trajectory getTrajectory() {
 		return trajectory;
 	}
-	
 }
