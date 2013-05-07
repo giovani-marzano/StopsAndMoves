@@ -15,10 +15,10 @@ public class Trajectory {
 	 */
 	private final long id;
 	
-	private List<SamplePoint> pointsList;
+	private List<SamplePoint> pointList;
 
-	public List<SamplePoint> getPointsList() {
-		return pointsList;
+	public List<SamplePoint> getPointList() {
+		return pointList;
 	}
 
 	public Trajectory(long id) {
@@ -27,7 +27,7 @@ public class Trajectory {
 	}
 
 	public void setPointsList(List<SamplePoint> pointsList) {
-		this.pointsList = pointsList;
+		this.pointList = pointsList;
 	}
 
 	public long getId() {

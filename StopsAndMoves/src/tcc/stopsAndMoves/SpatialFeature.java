@@ -34,6 +34,11 @@ public class SpatialFeature {
 		this.area = area;
 		this.minimunTime = minimunTime;
 	}
+	
+	public boolean contains(SamplePoint p) {
+		return this.getArea().contains(p.getLongitude(),
+				p.getLatitude());
+	}
 
 	public Shape getArea() {
 		return area;
