@@ -36,8 +36,8 @@ public class SpatialFeature {
 	}
 	
 	public boolean contains(SamplePoint p) {
-		return this.getArea().contains(p.getLongitude(),
-				p.getLatitude());
+		return this.getArea().contains(p.getLon(),
+				p.getLat());
 	}
 
 	public Shape getArea() {

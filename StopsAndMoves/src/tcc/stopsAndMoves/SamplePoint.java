@@ -9,17 +9,17 @@ public interface SamplePoint {
 	/**
 	 * @return Longitude da amostra
 	 */
-	double getLongitude();
+	double getLon();
 	
 	/**
 	 * 
 	 * @return Latitude da amostra
 	 */
-	double getLatitude();
+	double getLat();
 	
 	/**
 	 * 
 	 * @return Instante da amostra
 	 */
-	double getInstant();
+	double getTime();
 }

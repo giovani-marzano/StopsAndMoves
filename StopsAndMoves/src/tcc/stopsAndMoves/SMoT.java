@@ -53,7 +53,6 @@ public class SMoT {
 	// TODO: Associar Stops de origem e destino para os moves
 	public void processTrajectory(Trajectory trj,
 			Application app) {
-		List<SamplePoint> pointList = trj.getPointList();
 		Stop stop = null;
 		Move move = null;
 		Stop previousStop = null;
@@ -68,19 +67,19 @@ public class SMoT {
 		SpatialFeature regionCandidate = null;
 
 		int i = 0;
-		while (i < pointList.size()) {
-			regionCandidate = app.findIntersectingRegion(pointList.get(i));
+		while (i < trj.size()) {
+			regionCandidate = app.findIntersectingRegion(trj.get(i));
 			if (regionCandidate != null) {
 				enterInd = i;
 				i++;
 
-				while (regionCandidate.contains(pointList.get(i))) {
+				while (regionCandidate.contains(trj.get(i))) {
 					i++;
 				}
 				leaveInd = i - 1;
 
-				leaveTime = pointList.get(leaveInd).getInstant();
-				enterTime = pointList.get(enterInd).getInstant();
+				leaveTime = trj.get(leaveInd).getTime();
+				enterTime = trj.get(enterInd).getTime();
 				if (leaveTime - enterTime >= regionCandidate.getMinimunTime()) {
 					stop = createStop(trj, enterTime, leaveTime);
 					addStop(stop);
@@ -94,9 +93,9 @@ public class SMoT {
 			i++;
 			int j = 1;
 			
-			while (j+1 < pointList.size()) {
-				double t1 = pointList.get(i).getInstant();
-				double t2 = pointList.get(i+j).getInstant();
+			while (j+1 < trj.size()) {
+				double t1 = trj.get(i).getTime();
+				double t2 = trj.get(i+j).getTime();
 				if (t2 - t1 < app.getMinTime() ) {
 					j++;
 				}
@@ -105,11 +104,12 @@ public class SMoT {
 				}
 			}
 			
-			regionCandidate = app.findIntersectingRegion(pointList.get(i+j-1));
+			regionCandidate = app.findIntersectingRegion(trj.get(i+j-1));
 			if (regionCandidate == null) {
 				i = i + j;
 			}
 		}
+		
 		/* TODO:
 		if ( T [i -1] not ∈ previousStop )
 		// T do not end with a stop
