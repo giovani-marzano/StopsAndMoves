@@ -14,109 +14,88 @@ import java.util.List;
  * 
  */
 public class SMoT {
-	private List<Stop> stopList;
-	private List<Move> moveList;
 
-	private IdGenerator stopIdGen;
-	private IdGenerator moveIdGen;
-
-	private Stop createStop(Trajectory t, double enterTime, double leaveTime) {
-		long id = stopIdGen.generateId(t.getId());
-		Stop s = new Stop(t, id);
-		s.setEnterTime(enterTime);
-		s.setLeaveTime(leaveTime);
-		return s;
-	}
-
-	private Move createMove(Trajectory t) {
-		long id = moveIdGen.generateId(t.getId());
-		return new Move(t, id);
-	}
-
-	private void addStop(Stop s) {
-		if (stopList == null) {
-			stopList = new ArrayList<>();
-		}
-
-		stopList.add(s);
-	}
-
-	private void addMove(Move m) {
-		if (moveList == null) {
-			moveList = new ArrayList<>();
-		}
-
-		moveList.add(m);
-	}
-
-	// TODO: Associar pontos ao respectivo Move
-	// TODO: Associar Stops de origem e destino para os moves
 	public void processTrajectory(Trajectory trj,
 			Application app) {
-		Stop stop = null;
-		Move move = null;
-		Stop previousStop = null;
+		
+		List<Path> pathList = new ArrayList<>();
+		
+		Path path = new Path();
 
-		// Indice do ponto que entrou na regiao
-		int enterInd = 0;
-		double enterTime = 0;
-		// Indice do ponto em que a trajetoria saiu da regiao (último
-		// ponto na regiao de interesse)
-		int leaveInd = 0;
-		double leaveTime = 0;
 		SpatialFeature regionCandidate = null;
 
-		int i = 0;
-		while (i < trj.size()) {
-			regionCandidate = app.findIntersectingRegion(trj.get(i));
+		int atual = 0;
+		while (atual < trj.size()) {
+			regionCandidate = app.findIntersectingRegion(trj.get(atual));
 			if (regionCandidate != null) {
-				enterInd = i;
-				i++;
-
-				while (regionCandidate.contains(trj.get(i))) {
-					i++;
+				// O ponto intercepta uma região, aqui estamos no início de um
+				// possível STOP. Criamos um novo path atual, guardando o
+				// anterior na lista.
+				pathList.add(path);
+				path = new Path();
+				
+				// Adicionando o ponto ao path atual
+				path.add(trj.get(atual));
+				atual++;
+				
+				while (regionCandidate.contains(trj.get(atual))) {
+					// Equanto estiver na mesma regiao adiciona o ponto no path
+					// atual
+					path.add(trj.get(atual));
+					atual++;
 				}
-				leaveInd = i - 1;
 
-				leaveTime = trj.get(leaveInd).getTime();
-				enterTime = trj.get(enterInd).getTime();
-				if (leaveTime - enterTime >= regionCandidate.getMinimunTime()) {
-					stop = createStop(trj, enterTime, leaveTime);
-					addStop(stop);
-
-					move = createMove(trj);
-					addMove(move);
-
-					previousStop = stop;
+				if (path.getDeltaTime() >= regionCandidate.getMinimunTime()) {
+					// Neste ponto sabemos que todos os pontos do path sao um
+					// STOP
+					path.setType(PathType.STOP);
+					
+					// Acrescenta o path à lista de paths
+					pathList.add(path);
+					
+					// Inicia um novo path
+					path = new Path();
 				}
 			}
-			i++;
-			int j = 1;
+			// Aqui sabemos que o item atual não faz parte de um STOP pois
+			// não intercepta nenhuma região de interesse.
+			// Adicionamos ele ao path atual e incrementamos o índice
+			path.add(trj.get(atual));
+			atual++;
 			
-			while (j+1 < trj.size()) {
-				double t1 = trj.get(i).getTime();
-				double t2 = trj.get(i+j).getTime();
+			// Este trecho é uma otimização para não ficar procurando região de
+			// interesse para cada ponto da trajetória (custoso). Aqui o
+			// algoritmo busca uma sequencia de pontos que não poderia ser um
+			// STOP por ter seu selta T menor que o menor tempo mínimo de todas
+			// as regiões.
+			int j = 1;			
+			while (atual+j < trj.size()) {
+				double t1 = trj.get(atual).getTime();
+				double t2 = trj.get(atual+j).getTime();
 				if (t2 - t1 < app.getMinTime() ) {
 					j++;
 				}
 				else {
+					// A sequencia de pontos [atual, atual+j-1) com certeza não
+					// constitui um STOP pois não tem a duração mínima para tal
 					break;
 				}
 			}
-			
-			regionCandidate = app.findIntersectingRegion(trj.get(i+j-1));
+			// Para ter certeza que nenhum ponto de [atual, atual+j-1) participa
+			// de um STOP, analisa-se se o ultimo ponto (atual+j-1) intercepta
+			// alguma região de interesse.
+			regionCandidate = app.findIntersectingRegion(trj.get(atual+j-1));
 			if (regionCandidate == null) {
-				i = i + j;
+				// Aqui pode-se afirmar que nenhum ponto de atual até atual+j-1
+				// pertence a um STOP. Assim adiciona-se estes pontos ao path
+				// atual e seta-se atual com indice do primeiro ponto após este
+				// intervalo
+				path.addAll(trj.subList(atual, atual+j-1));
+				atual = atual + j;
 			}
 		}
 		
-		/* TODO:
-		if ( T [i -1] not ∈ previousStop )
-		// T do not end with a stop
-		move =( T , previousStop , null ,
-		previousStop . leaveTime , time ( T [i -1]))
-		M . add ( move );
-		endif
-		*/
+		// Por fim adiciona-se o ultimo path à lista de paths
+		pathList.add(path);
 	}
 }
