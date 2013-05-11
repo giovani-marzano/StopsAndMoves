@@ -3,8 +3,8 @@ package tcc.stopsAndMoves;
 public class Stop {	
 	private final Trajectory trajectory;
 	private final long id;
-	private double enterTime;
-	private double leaveTime;
+
+	private Path path;
 	
 	public Stop(Trajectory trajectory, long id) {
 		super();
@@ -14,19 +14,11 @@ public class Stop {
 	}
 
 	public double getEnterTime() {
-		return enterTime;
-	}
-
-	public void setEnterTime(double enterTime) {
-		this.enterTime = enterTime;
+		return path.getEnterTime();
 	}
 
 	public double getLeaveTime() {
-		return leaveTime;
-	}
-
-	public void setLeaveTime(double leaveTime) {
-		this.leaveTime = leaveTime;
+		return path.getLeaveTime();
 	}
 
 	public Trajectory getTrajectory() {
@@ -35,5 +27,13 @@ public class Stop {
 
 	public long getId() {
 		return id;
+	}
+
+	public Path getPath() {
+		return path;
+	}
+
+	public void setPath(Path path) {
+		this.path = path;
 	}
 }

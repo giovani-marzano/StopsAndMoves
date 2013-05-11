@@ -1,14 +1,13 @@
 package tcc.stopsAndMoves;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Move {
 	private final Trajectory trajectory;
 	private final long id; 
-	private List<SamplePoint> pointsList;
+
 	private Stop origin;
 	private Stop destination;
+	
+	private Path path;
 	
 	public Move(Trajectory trajectory, long id) {
 		super();
@@ -18,24 +17,10 @@ public class Move {
 		this.trajectory = trajectory;
 		
 		this.id = id;
-		
-		pointsList = new ArrayList<>();
 	}
 
 	public long getId() {
 		return id;
-	}
-	
-	public void addPoint(SamplePoint p) {
-		pointsList.add(p);
-	}
-
-	public List<SamplePoint> getPointsList() {
-		return pointsList;
-	}
-
-	public void setPointsList(List<SamplePoint> pointsList) {
-		this.pointsList = pointsList;
 	}
 
 	public Stop getOrigin() {
@@ -56,5 +41,13 @@ public class Move {
 
 	public Trajectory getTrajectory() {
 		return trajectory;
+	}
+
+	public Path getPath() {
+		return path;
+	}
+
+	public void setPath(Path path) {
+		this.path = path;
 	}
 }

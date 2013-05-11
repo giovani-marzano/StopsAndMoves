@@ -26,4 +26,12 @@ public class Trajectory extends Path {
 	public void setId(long id) {
 		this.id = id;
 	}
+	
+	public void addStop(Path path, SpatialFeature sp) {
+		// TODO
+	}
+	
+	public void addMove(Path path) {
+		// TODO
+	}
 }
