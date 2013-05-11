@@ -9,16 +9,6 @@ import java.util.ArrayList;
  */
 public class Path extends ArrayList<SamplePoint> {
 	private static final long serialVersionUID = 1L;
-
-	private PathType type = PathType.MOVE;
-
-	public PathType getType() {
-		return type;
-	}
-
-	public void setType(PathType type) {
-		this.type = type;
-	}
 	
 	public double getEnterTime() {
 		if (isEmpty()) {

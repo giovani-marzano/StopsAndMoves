@@ -1,16 +1,17 @@
 package tcc.stopsAndMoves;
 
-public class Stop {	
+public class Stop {
 	private final Trajectory trajectory;
 	private final long id;
 
+	private SpatialFeature spatialFeature;
 	private Path path;
-	
-	public Stop(Trajectory trajectory, long id) {
+
+	public Stop(Trajectory trajectory, long id, SpatialFeature sp) {
 		super();
 		this.trajectory = trajectory;
-		
 		this.id = id;
+		this.spatialFeature = sp;
 	}
 
 	public double getEnterTime() {
@@ -23,6 +24,10 @@ public class Stop {
 
 	public Trajectory getTrajectory() {
 		return trajectory;
+	}
+
+	public SpatialFeature getSpatialFeature() {
+		return spatialFeature;
 	}
 
 	public long getId() {
