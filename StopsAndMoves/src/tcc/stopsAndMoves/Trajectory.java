@@ -1,6 +1,7 @@
 package tcc.stopsAndMoves;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Representa uma trajetória como uma coleção de pontos espaço-temporais
@@ -43,6 +44,14 @@ public class Trajectory extends Path {
 		this.id = id;
 	}
 
+	public List<Move> getMoves() {
+		return moves;
+	}
+
+	public List<Stop> getStops() {
+		return stops;
+	}
+
 	public void addStop(Path path, SpatialFeature sp) {
 		if (!path.isEmpty()) {
 			Stop stop = new Stop(this, stopId++, sp);
@@ -51,9 +60,6 @@ public class Trajectory extends Path {
 
 			switch (lastPathType) {
 			case MOVE:
-				stop = new Stop(this, stopId++, sp);
-				stop.setPath(path);
-				stops.add(stop);
 				// Este Stop é o destino do último Move
 				moves.get(moves.size() - 1).setDestination(stop);
 				break;
