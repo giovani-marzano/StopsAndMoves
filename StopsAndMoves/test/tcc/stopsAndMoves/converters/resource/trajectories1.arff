@@ -1,0 +1,35 @@
+% Arquivo de trajetorias utilizado nos testes de unidade
+%
+% Os pontos definidos no arquivo devem ser agrupados por trajetoria e ordenados
+% no tempo (Time) em cada agrupamento.
+%
+@relation 'Trajectory_Points'
+
+@attribute TId numeric
+@attribute Time date 'yyyy-MM-dd HH:mm:ss'
+@attribute Lat numeric
+@attribute Lon numeric
+
+@data
+
+% Trajetoria 1: 10 pontos
+1,'2013-05-18 12:02:00',-43.124,-20.442
+1,'2013-05-18 12:03:00',-43.125,-20.452
+1,'2013-05-18 12:04:00',-43.126,-20.462
+1,'2013-05-18 12:05:00',-43.133,-20.472
+1,'2013-05-18 12:06:00',-43.143,-20.462
+1,'2013-05-18 12:07:00',-43.153,-20.452
+1,'2013-05-18 12:08:00',-43.143,-20.432
+1,'2013-05-18 12:09:00',-43.133,-20.432
+1,'2013-05-18 12:10:00',-43.123,-20.472
+1,'2013-05-18 12:20:00',-43.113,-20.422
+
+% Trajetoria 2: 1 ponto
+2,'2013-05-18 12:01:00',-43.123,-20.432
+
+% Trajetoria 3: 5 pontos
+3,'2013-05-18 12:06:00',-43.123,-20.432
+3,'2013-05-18 12:12:00',-44.123,-20.332
+3,'2013-05-18 12:18:00',-45.123,-20.232
+3,'2013-05-18 12:24:00',-46.123,-20.332
+3,'2013-05-18 12:28:00',-47.123,-20.432
