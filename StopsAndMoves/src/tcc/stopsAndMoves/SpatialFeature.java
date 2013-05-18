@@ -12,7 +12,7 @@ public class SpatialFeature {
 	/**
 	 * Identificador da região
 	 */
-	private final String id;
+	private final long id;
 	
 	/**
 	 * Definição da área coberta pela regiao de interesse
@@ -25,11 +25,8 @@ public class SpatialFeature {
 	 */
 	private double minimunTime;
 
-	public SpatialFeature(String id, Shape area, double minimunTime) {
+	public SpatialFeature(long id, Shape area, double minimunTime) {
 		super();
-		if (id == null) {
-			throw new NullPointerException("id is null");
-		}
 		this.id = id;
 		this.area = area;
 		this.minimunTime = minimunTime;
@@ -56,14 +53,14 @@ public class SpatialFeature {
 		this.minimunTime = minimunTime;
 	}
 
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof SpatialFeature) {
-			return id.equals(((SpatialFeature) obj).id);
+			return id == ((SpatialFeature) obj).id;
 		} else {
 			return false;
 		}
@@ -71,7 +68,7 @@ public class SpatialFeature {
 
 	@Override
 	public int hashCode() {
-		return id.hashCode();
+		return ((Long)id).hashCode();
 	}
 	
 }

@@ -59,7 +59,7 @@ public class TestSMoTProcessTrajectory {
 		Set<SpatialFeature> set = new HashSet<>();
 		Rectangle area = new Rectangle();
 		area.setRect(-0.5, -0.5, 110, 2);
-		SpatialFeature sp = new SpatialFeature("teste", area, 2);
+		SpatialFeature sp = new SpatialFeature(1, area, 2);
 		set.add(sp);
 		Application app = new Application(set);
 
@@ -77,12 +77,12 @@ public class TestSMoTProcessTrajectory {
 		Rectangle2D.Double area = new Rectangle2D.Double();
 
 		area.setRect(-0.5, -0.5, 11, 2);
-		SpatialFeature sp = new SpatialFeature("01", area, 2);
+		SpatialFeature sp = new SpatialFeature(1, area, 2);
 		set.add(sp);
 
 		area = new Rectangle2D.Double();
 		area.setRect(89.5, -0.5, 11, 2);
-		sp = new SpatialFeature("02", area, 2);
+		sp = new SpatialFeature(2, area, 2);
 		set.add(sp);
 
 		Application app = new Application(set);
@@ -97,8 +97,8 @@ public class TestSMoTProcessTrajectory {
 		assertEquals(11, stop1.getPath().size());
 		// Este stop deve ter os pontos [90,99]
 		assertEquals(10, stop2.getPath().size());
-		assertEquals("01", stop1.getSpatialFeature().getId());
-		assertEquals("02", stop2.getSpatialFeature().getId());
+		assertEquals(1, stop1.getSpatialFeature().getId());
+		assertEquals(2, stop2.getSpatialFeature().getId());
 		assertEquals(1, trj.getMoves().size());
 		Move move = trj.getMoves().get(0);
 		// Este move deve ter os pontos de [11,89]
@@ -113,7 +113,7 @@ public class TestSMoTProcessTrajectory {
 		Rectangle2D.Double area = new Rectangle2D.Double();
 
 		area.setRect(10.5, -0.5, 79, 2);
-		SpatialFeature sp = new SpatialFeature("01", area, 2);
+		SpatialFeature sp = new SpatialFeature(1, area, 2);
 		set.add(sp);
 
 		Application app = new Application(set);
@@ -125,7 +125,7 @@ public class TestSMoTProcessTrajectory {
 		stop1 = trj.getStops().get(0);
 		// Este stop deve ter os pontos [11,89]
 		assertEquals(79, stop1.getPath().size());
-		assertEquals("01", stop1.getSpatialFeature().getId());
+		assertEquals(1, stop1.getSpatialFeature().getId());
 		assertEquals(2, trj.getMoves().size());
 		Move move1 = trj.getMoves().get(0);
 		Move move2 = trj.getMoves().get(1);
