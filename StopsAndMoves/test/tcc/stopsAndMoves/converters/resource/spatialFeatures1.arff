@@ -1,0 +1,13 @@
+% Arquivo de regiões de interesse utilizado em testes de unidade
+%
+@relation SpatialFeature
+
+@attribute SFId numeric
+@attribute MinTime numeric
+
+@data
+
+1,10
+2,20
+% A regiao 3 nao existira neste arquivo
+4,40

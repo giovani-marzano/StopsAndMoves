@@ -6,39 +6,42 @@ import java.awt.Shape;
  * Regiao de interesse.
  * 
  * @author giovani
- *
+ * 
  */
 public class SpatialFeature {
 	/**
 	 * Identificador da região
 	 */
 	private final long id;
-	
+
 	/**
 	 * Definição da área coberta pela regiao de interesse
 	 */
 	private Shape area;
-	
+
 	/**
 	 * Tempo minimo que uma trajetoria deve permaneceer nesta região de
-	 * interesse para se considerar que parou nesta região. 
+	 * interesse para se considerar que parou nesta região.
 	 */
 	private double minimunTime;
 
 	public SpatialFeature(long id) {
 		this(id, null, 0);
 	}
-	
+
 	public SpatialFeature(long id, Shape area, double minimunTime) {
 		super();
 		this.id = id;
 		this.area = area;
 		this.minimunTime = minimunTime;
 	}
-	
+
 	public boolean contains(SamplePoint p) {
-		return this.getArea().contains(p.getLon(),
-				p.getLat());
+		if (getArea() == null) {
+			return false;
+		} else {
+			return getArea().contains(p.getLon(), p.getLat());
+		}
 	}
 
 	public Shape getArea() {
@@ -72,7 +75,7 @@ public class SpatialFeature {
 
 	@Override
 	public int hashCode() {
-		return ((Long)id).hashCode();
+		return ((Long) id).hashCode();
 	}
-	
+
 }

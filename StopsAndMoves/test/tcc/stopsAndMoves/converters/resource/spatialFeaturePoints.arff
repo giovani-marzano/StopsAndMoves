@@ -1,0 +1,30 @@
+% Arquivo de definição dos poligonos das regiões de interesse, utilizado
+% em testes de unidade
+%
+% O programa espera que os pontos estejam agrupados por SFId e, cada grupo,
+% ordenados pelo Index.
+@relation SF_Points
+
+@attribute SFId numeric
+@attribute Index numeric
+@attribute Lat numeric
+@attribute Lon numeric
+
+@data
+
+1,0,10,10
+1,1,10,15
+1,2,15,15
+1,3,15,10
+
+2,0,20,20
+2,1,30,30
+2,2,20,40
+
+% Pontos da região 3, que não existe em 'spatialFeatures1.arff'
+3,0,50,50
+3,1,50,55
+3,2,55,55
+3,3,55,50
+
+% A região 4 não terá pontos neste arquivo
