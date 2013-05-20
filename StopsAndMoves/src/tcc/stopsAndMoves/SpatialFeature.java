@@ -25,6 +25,10 @@ public class SpatialFeature {
 	 */
 	private double minimunTime;
 
+	public SpatialFeature(long id) {
+		this(id, null, 0);
+	}
+	
 	public SpatialFeature(long id, Shape area, double minimunTime) {
 		super();
 		this.id = id;
