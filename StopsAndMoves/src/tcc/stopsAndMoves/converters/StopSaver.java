@@ -7,6 +7,7 @@ import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.converters.Saver;
 
 public class StopSaver extends AbstractSaver {
 	public static final int INDEX_TID = 0;
@@ -41,7 +42,15 @@ public class StopSaver extends AbstractSaver {
 	}
 
 	public void writeIncremental(Stop stop) throws IOException {
-		if (stop == null || saver == null) {
+		if (saver == null) {
+			throw new IOException("Saver not defined");
+		}
+		
+		if ( stop == null ) {
+			if (saver.getWriteMode() == Saver.INCREMENTAL) {
+				saver.writeIncremental(null);
+			}
+			
 			return;
 		}
 		

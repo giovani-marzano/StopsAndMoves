@@ -23,6 +23,7 @@ public abstract class AbstractSaver {
 
 	public void setSaver(Saver saver) {
 		this.saver = saver;
+		saver.setRetrieval(Saver.INCREMENTAL);
 		saver.setInstances(getStructure());
 	}
 
