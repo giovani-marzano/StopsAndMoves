@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import tcc.stopsAndMoves.Path;
 import tcc.stopsAndMoves.SimplePoint;
 import tcc.stopsAndMoves.SpatialFeature;
 import tcc.stopsAndMoves.Trajectory;
@@ -52,17 +53,17 @@ public class TestTrajectorySaver {
 		trajectorySaver = new TrajectorySaver();
 
 		ArffSaver saver = new ArffSaver();
-		saver.setDestination(moveFile);
+		saver.setFile(moveFile);
 
 		trajectorySaver.setMoveSaver(saver);
 
 		saver = new ArffSaver();
-		saver.setDestination(movePointsFile);
+		saver.setFile(movePointsFile);
 
 		trajectorySaver.setMovePointsSaver(saver);
 
 		saver = new ArffSaver();
-		saver.setDestination(stopFile);
+		saver.setFile(stopFile);
 
 		trajectorySaver.setStopSaver(saver);
 	}
@@ -90,6 +91,34 @@ public class TestTrajectorySaver {
 		trajectorySaver.writeIncremental(trj);
 		trajectorySaver.writeIncremental(null);
 		
+		System.out.println(moveFile.getPath());
+	}
+	
+	@Test
+	public void justOneStop() throws IOException {
+		trj.addStop(trj, spList.get(0));
+		trajectorySaver.writeIncremental(trj);
+		trajectorySaver.writeIncremental(null);
+		System.out.println(moveFile.getPath());
+	}
+	
+	@Test
+	public void moveStopMove() throws IOException {
+		trj.addMove(new Path(trj.subList(0, 30)));
+		trj.addStop(new Path(trj.subList(30, 60)), spList.get(0));
+		trj.addMove(new Path(trj.subList(60, 100)));
+		trajectorySaver.writeIncremental(trj);
+		trajectorySaver.writeIncremental(null);
+		System.out.println(moveFile.getPath());
+	}
+	
+	@Test
+	public void stopMoveStop() throws IOException {
+		trj.addStop(new Path(trj.subList(0, 30)), spList.get(0));
+		trj.addMove(new Path(trj.subList(30, 60)));
+		trj.addStop(new Path(trj.subList(60, 100)), spList.get(1));
+		trajectorySaver.writeIncremental(trj);
+		trajectorySaver.writeIncremental(null);
 		System.out.println(moveFile.getPath());
 	}
 }

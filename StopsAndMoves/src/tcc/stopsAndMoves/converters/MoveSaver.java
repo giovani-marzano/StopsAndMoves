@@ -52,17 +52,15 @@ public class MoveSaver extends AbstractSaver {
 		if (saver == null) {
 			throw new IOException("Saver not defined");
 		}
-		
+
 		// Se o move for nulo indica que terminou a saida de dados
 		if (move == null) {
-			if (saver.getWriteMode() == Saver.INCREMENTAL) {
-				saver.writeIncremental(null);
-			}
-			
+			saver.writeIncremental(null);
+
 			if (pointsSaver != null) {
 				pointsSaver.writeIncremental(null);
 			}
-			
+
 			return;
 		}
 
@@ -84,9 +82,9 @@ public class MoveSaver extends AbstractSaver {
 		Instance ins = new Instance(1, values);
 
 		saver.writeIncremental(ins);
-		
+
 		// Salva também os pontos se houver um pointSaver definido
-		if ( pointsSaver != null ) {
+		if (pointsSaver != null) {
 			pointsSaver.writeIncremental(move);
 		}
 	}
@@ -98,12 +96,12 @@ public class MoveSaver extends AbstractSaver {
 	public void setPointsSaver(MovePointsSaver pointsSaver) {
 		this.pointsSaver = pointsSaver;
 	}
-	
+
 	public void setPointsSaver(Saver saver) {
 		if (pointsSaver == null) {
 			pointsSaver = new MovePointsSaver();
 		}
-		
+
 		pointsSaver.setSaver(saver);
 	}
 }

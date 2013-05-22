@@ -8,7 +8,6 @@ import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.converters.Saver;
 
 public class MovePointsSaver extends AbstractSaver {
 	public static final int INDEX_TID = 0;
@@ -36,7 +35,7 @@ public class MovePointsSaver extends AbstractSaver {
 
 		return structure;
 	}
-	
+
 	@Override
 	public void resetStructure() {
 		structure = null;
@@ -46,12 +45,9 @@ public class MovePointsSaver extends AbstractSaver {
 		if (saver == null) {
 			throw new IOException("Saver not defined");
 		}
-		
+
 		if (move == null) {
-			// Ending the writing and closing the saver
-			if (saver.getWriteMode() == Saver.INCREMENTAL) {
-				saver.writeIncremental(null);
-			}
+			saver.writeIncremental(null);
 			return;
 		}
 
