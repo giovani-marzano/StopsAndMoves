@@ -30,7 +30,8 @@ public class TestSMoTProcessTrajectory {
 		// Crindo uma aplicação sem nenhuma região de interesse
 		Application app = new Application(null);
 
-		smot.processTrajectory(trj, app);
+		smot.setApplication(app);
+		smot.processTrajectory(trj);
 
 		assertEquals(1, trj.getMoves().size());
 		assertEquals(trj.size(), trj.getMoves().get(0).getPath().size());
@@ -42,8 +43,9 @@ public class TestSMoTProcessTrajectory {
 		// Criando uma aplicação sem nenhuma região de interesse
 		Set<SpatialFeature> set = new HashSet<>();
 		Application app = new Application(set);
-
-		smot.processTrajectory(trj, app);
+		
+		smot.setApplication(app);
+		smot.processTrajectory(trj);
 
 		assertEquals(1, trj.getMoves().size());
 		assertEquals(trj.size(), trj.getMoves().get(0).getPath().size());
@@ -63,8 +65,9 @@ public class TestSMoTProcessTrajectory {
 		set.add(sp);
 		Application app = new Application(set);
 
-		smot.processTrajectory(trj, app);
-
+		smot.setApplication(app);
+		smot.processTrajectory(trj);
+		
 		assertEquals(1, trj.getStops().size());
 		assertEquals(trj.size(), trj.getStops().get(0).getPath().size());
 		assertEquals(sp, trj.getStops().get(0).getSpatialFeature());
@@ -87,8 +90,9 @@ public class TestSMoTProcessTrajectory {
 
 		Application app = new Application(set);
 
-		smot.processTrajectory(trj, app);
-
+		smot.setApplication(app);
+		smot.processTrajectory(trj);
+		
 		assertEquals(2, trj.getStops().size());
 		Stop stop1, stop2;
 		stop1 = trj.getStops().get(0);
@@ -118,8 +122,9 @@ public class TestSMoTProcessTrajectory {
 
 		Application app = new Application(set);
 
-		smot.processTrajectory(trj, app);
-
+		smot.setApplication(app);
+		smot.processTrajectory(trj);
+		
 		assertEquals(1, trj.getStops().size());
 		Stop stop1;
 		stop1 = trj.getStops().get(0);

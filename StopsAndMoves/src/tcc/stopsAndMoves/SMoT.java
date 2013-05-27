@@ -1,5 +1,10 @@
 package tcc.stopsAndMoves;
 
+import java.io.IOException;
+
+import tcc.stopsAndMoves.converters.TrajectoryLoader;
+import tcc.stopsAndMoves.converters.TrajectorySaver;
+
 /**
  * Implementação do algoritmo Stops and Moves on Trajectories (SMoT).
  * 
@@ -11,8 +16,49 @@ package tcc.stopsAndMoves;
  * 
  */
 public class SMoT {
+	
+	private Application application;
+	private TrajectorySaver trajectoySaver;
+	private TrajectoryLoader trajectoryLoader;
 
-	public void processTrajectory(Trajectory trj, Application app) {
+	public boolean processNextTrajectory() throws IOException {
+		Trajectory trj;
+		
+		trj = trajectoryLoader.getNextTrajectory();
+		
+		if (trj != null) {
+			processTrajectory(trj);
+			
+			trajectoySaver.writeIncremental(trj);
+			
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public void processAll() throws IOException {
+		boolean hasNext = true;
+		
+		while (hasNext) {
+			hasNext = processNextTrajectory();
+		}
+	}
+	
+	public boolean processSome(int quant) throws IOException {
+		boolean hasNext = true;
+		int count = 0;
+		
+		while ( count < quant && hasNext ) {
+			hasNext = processNextTrajectory();
+			count++;
+		}
+		
+		return hasNext;
+	}
+	
+	public void processTrajectory(Trajectory trj) {
 
 		Path path = new Path();
 
@@ -20,7 +66,7 @@ public class SMoT {
 
 		int atual = 0;
 		while (atual < trj.size()) {
-			regionCandidate = app.findIntersectingRegion(trj.get(atual));
+			regionCandidate = application.findIntersectingRegion(trj.get(atual));
 			if (regionCandidate != null) {
 				// O ponto intercepta uma região, aqui estamos no início de um
 				// possível STOP. Criamos um novo path atual, guardando o
@@ -66,7 +112,7 @@ public class SMoT {
 				while (atual + j < trj.size()) {
 					double t1 = trj.get(atual).getTime();
 					double t2 = trj.get(atual + j).getTime();
-					if (t2 - t1 < app.getMinTime()) {
+					if (t2 - t1 < application.getMinTime()) {
 						j++;
 					} else {
 						/*
@@ -82,7 +128,7 @@ public class SMoT {
 				 * participa de um STOP, analisa-se se o ultimo ponto
 				 * (atual+j-1) intercepta alguma região de interesse.
 				 */
-				regionCandidate = app.findIntersectingRegion(trj.get(atual + j
+				regionCandidate = application.findIntersectingRegion(trj.get(atual + j
 						- 1));
 				if (regionCandidate == null) {
 					/*
@@ -99,5 +145,29 @@ public class SMoT {
 
 		// Por fim adiciona-se o ultimo path à trajetoria como um Move
 		trj.addMove(path);
+	}
+
+	public TrajectorySaver getTrajectoySaver() {
+		return trajectoySaver;
+	}
+
+	public void setTrajectoySaver(TrajectorySaver trajectoySaver) {
+		this.trajectoySaver = trajectoySaver;
+	}
+
+	public TrajectoryLoader getTrajectoryLoader() {
+		return trajectoryLoader;
+	}
+
+	public void setTrajectoryLoader(TrajectoryLoader trajectoryLoader) {
+		this.trajectoryLoader = trajectoryLoader;
+	}
+
+	public Application getApplication() {
+		return application;
+	}
+
+	public void setApplication(Application application) {
+		this.application = application;
 	}
 }
