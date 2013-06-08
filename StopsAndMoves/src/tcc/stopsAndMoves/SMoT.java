@@ -20,6 +20,8 @@ public class SMoT {
 	private Application application;
 	private TrajectorySaver trajectoySaver;
 	private TrajectoryLoader trajectoryLoader;
+	
+	private int numProcessedTrajectories = 0;
 
 	public boolean processNextTrajectory() throws IOException {
 		Trajectory trj;
@@ -30,7 +32,7 @@ public class SMoT {
 			processTrajectory(trj);
 			
 			trajectoySaver.writeIncremental(trj);
-			
+			numProcessedTrajectories++;
 			return true;
 		}
 		else {
@@ -169,5 +171,13 @@ public class SMoT {
 
 	public void setApplication(Application application) {
 		this.application = application;
+	}
+
+	public int getNumProcessedTrajectories() {
+		return numProcessedTrajectories;
+	}
+
+	public void setNumProcessedTrajectories(int numProcessedTrajectories) {
+		this.numProcessedTrajectories = numProcessedTrajectories;
 	}
 }
