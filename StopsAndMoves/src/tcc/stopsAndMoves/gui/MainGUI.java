@@ -18,6 +18,7 @@ import javax.swing.JProgressBar;
 import javax.swing.border.EmptyBorder;
 
 import tcc.stopsAndMoves.control.SMoTControl;
+import weka.gui.ConverterFileChooser;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -35,6 +36,7 @@ public class MainGUI implements PropertyChangeListener {
 	private OutputPanel panelMovePoints;
 	private JButton btnRun;
 	private JProgressBar progressBar;
+
 	private SMoTControl control;
 
 	/**
@@ -65,6 +67,15 @@ public class MainGUI implements PropertyChangeListener {
 		protected Void doInBackground() throws Exception {
 			boolean hasNext = true;
 
+			// TODO tratamento de exceções de modo que o usuário saiba o que ocorreu
+			
+			control.createApplication(panelRoI.getLoader(),
+					panelRoIPts.getLoader());
+			control.createTrajectoryLoader(panelTrajectory.getLoader());
+			control.createTrajectorySaver(panelStops.getSaver(),
+					panelMoves.getSaver(), panelMovePoints.getSaver());
+			control.createSMoT();
+
 			while (hasNext == true) {
 				hasNext = control.processSomeTrajectories(10);
 				setProgress(control.getNumProcessedTrj() % 100);
@@ -74,45 +85,58 @@ public class MainGUI implements PropertyChangeListener {
 
 		@Override
 		protected void done() {
-			btnRun.setEnabled(true);
 			super.done();
+			
+			btnRun.setEnabled(true);
+			panelMovePoints.setEnabled(true);
+			panelRoI.setEnabled(true);
+			panelMoves.setEnabled(true);
+			panelRoIPts.setEnabled(true);
+			panelStops.setEnabled(true);
+			panelTrajectory.setEnabled(true);
+
+			// TODO Abrir janela informando o usuário do ocorrido
+			// TODO Resetar os loaders e savers pois não servem mais
 		}
 
 	}
 
 	private void execute() {
 		btnRun.setEnabled(false);
+		panelMovePoints.setEnabled(false);
+		panelRoI.setEnabled(false);
+		panelMoves.setEnabled(false);
+		panelRoIPts.setEnabled(false);
+		panelStops.setEnabled(false);
+		panelTrajectory.setEnabled(false);
+
 		progressBar.setValue(0);
 		progressBar.setString("0");
 
 		control = new SMoTControl();
 
-		try {
-			control.createApplication(panelRoI.getLoader(),
-					panelRoIPts.getLoader());
-			control.createTrajectoryLoader(panelTrajectory.getLoader());
-			control.createTrajectorySaver(panelStops.getSaver(),
-					panelMoves.getSaver(), panelMovePoints.getSaver());
-			control.createSMoT();
-		} catch (Exception e) {
-			// TODO Tratar exceção
-		}
-
 		Task task = new Task(control);
 
 		task.addPropertyChangeListener(this);
 
-		task.run();
+		task.execute();
+
+		progressBar.setIndeterminate(true);
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
-			progressBar.setValue((Integer) evt.getNewValue());
-			if (control != null) {
-				progressBar.setString("" + control.getNumProcessedTrj());
-			} else {
-				progressBar.setString("");
+			int progress = (int) evt.getNewValue();
+
+			if (progress != 0) {
+				progressBar.setIndeterminate(false);
+				progressBar.setValue((Integer) evt.getNewValue());
+				if (control != null) {
+					progressBar.setString("" + control.getNumProcessedTrj());
+				} else {
+					progressBar.setString("");
+				}
 			}
 		}
 	}
@@ -162,6 +186,8 @@ public class MainGUI implements PropertyChangeListener {
 		panelInputs.setLayout(gbl_panelInputs);
 
 		panelTrajectory = new InputPanel();
+		panelTrajectory.setDefaultFile(Messages
+				.getString("MainGUI.panelTrajectory.defaultFile")); //$NON-NLS-1$
 		panelTrajectory.setTitle(Messages
 				.getString("MainGUI.panelTrajectory.title")); //$NON-NLS-1$
 		GridBagConstraints gbc_panelTrajectory = new GridBagConstraints();
@@ -172,6 +198,8 @@ public class MainGUI implements PropertyChangeListener {
 		panelInputs.add(panelTrajectory, gbc_panelTrajectory);
 
 		panelRoI = new InputPanel();
+		panelRoI.setDefaultFile(Messages
+				.getString("MainGUI.panelRoI.defaultFile")); //$NON-NLS-1$
 		panelRoI.setTitle(Messages.getString("MainGUI.panelRoI.title")); //$NON-NLS-1$
 		GridBagConstraints gbc_panelRoI = new GridBagConstraints();
 		gbc_panelRoI.fill = GridBagConstraints.BOTH;
@@ -181,6 +209,8 @@ public class MainGUI implements PropertyChangeListener {
 		panelInputs.add(panelRoI, gbc_panelRoI);
 
 		panelRoIPts = new InputPanel();
+		panelRoIPts.setDefaultFile(Messages
+				.getString("MainGUI.panelRoIPts.defaultFile")); //$NON-NLS-1$
 		panelRoIPts.setTitle(Messages.getString("MainGUI.inputPanel.title")); //$NON-NLS-1$
 		GridBagConstraints gbc_panelRoIPts = new GridBagConstraints();
 		gbc_panelRoIPts.fill = GridBagConstraints.BOTH;
@@ -205,6 +235,8 @@ public class MainGUI implements PropertyChangeListener {
 		panelOutputs.setLayout(gbl_panelOutputs);
 
 		panelStops = new OutputPanel();
+		panelStops.setDefaultFile(Messages
+				.getString("MainGUI.panelStops.defaultFile")); //$NON-NLS-1$
 		panelStops.setTitle(Messages.getString("MainGUI.panelStops.title")); //$NON-NLS-1$
 		GridBagConstraints gbc_panelStops = new GridBagConstraints();
 		gbc_panelStops.fill = GridBagConstraints.BOTH;
@@ -214,6 +246,8 @@ public class MainGUI implements PropertyChangeListener {
 		panelOutputs.add(panelStops, gbc_panelStops);
 
 		panelMoves = new OutputPanel();
+		panelMoves.setDefaultFile(Messages
+				.getString("MainGUI.panelMoves.defaultFile")); //$NON-NLS-1$
 		panelMoves.setTitle(Messages.getString("MainGUI.panelMoves.title")); //$NON-NLS-1$
 		GridBagConstraints gbc_panelMoves = new GridBagConstraints();
 		gbc_panelMoves.fill = GridBagConstraints.BOTH;
@@ -223,6 +257,8 @@ public class MainGUI implements PropertyChangeListener {
 		panelOutputs.add(panelMoves, gbc_panelMoves);
 
 		panelMovePoints = new OutputPanel();
+		panelMovePoints.setDefaultFile(Messages
+				.getString("MainGUI.panelMovePoints.defaultFile")); //$NON-NLS-1$
 		panelMovePoints.setTitle(Messages
 				.getString("MainGUI.panelMovePoints.title")); //$NON-NLS-1$
 		GridBagConstraints gbc_panelMovePoints = new GridBagConstraints();
@@ -251,7 +287,15 @@ public class MainGUI implements PropertyChangeListener {
 		progressBar.setStringPainted(true);
 		panel_1.add(progressBar);
 
+		ConverterFileChooser fileChooser = new ConverterFileChooser();
+
+		panelTrajectory.setFileChooser(fileChooser);
+		panelRoI.setFileChooser(fileChooser);
+		panelRoIPts.setFileChooser(fileChooser);
+		panelMoves.setFileChooser(fileChooser);
+		panelMovePoints.setFileChooser(fileChooser);
+		panelStops.setFileChooser(fileChooser);
+
 		// frmStopsAndMoves.pack();
 	}
-
 }
