@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 import javax.swing.border.TitledBorder;
@@ -24,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.concurrent.ExecutionException;
 
 public class MainGUI implements PropertyChangeListener {
 
@@ -55,38 +57,76 @@ public class MainGUI implements PropertyChangeListener {
 		});
 	}
 
-	class Task extends SwingWorker<Void, Void> {
+	class Task extends SwingWorker<Boolean, Void> {
 
 		private SMoTControl control;
+		private Exception excepton;
 
 		public Task(SMoTControl c) {
 			control = c;
 		}
 
 		@Override
-		protected Void doInBackground() throws Exception {
-			boolean hasNext = true;
+		protected Boolean doInBackground() {
+			boolean result = true;
 
-			// TODO tratamento de exceções de modo que o usuário saiba o que ocorreu
-			
-			control.createApplication(panelRoI.getLoader(),
-					panelRoIPts.getLoader());
-			control.createTrajectoryLoader(panelTrajectory.getLoader());
-			control.createTrajectorySaver(panelStops.getSaver(),
-					panelMoves.getSaver(), panelMovePoints.getSaver());
-			control.createSMoT();
+			try {
+				boolean hasNext = true;
+				control.createApplication(panelRoI.getLoader(),
+						panelRoIPts.getLoader());
+				control.createTrajectoryLoader(panelTrajectory.getLoader());
+				control.createTrajectorySaver(panelStops.getSaver(),
+						panelMoves.getSaver(), panelMovePoints.getSaver());
+				control.createSMoT();
 
-			while (hasNext == true) {
-				hasNext = control.processSomeTrajectories(10);
-				setProgress(control.getNumProcessedTrj() % 100);
+				while (hasNext == true) {
+					hasNext = control.processSomeTrajectories(10);
+					setProgress(control.getNumProcessedTrj() % 100);
+				}
+			} catch (Exception e) {
+				excepton = e;
+				result = false;
 			}
-			return null;
+			return result;
 		}
 
 		@Override
 		protected void done() {
 			super.done();
+
+			try {
+				boolean result = get();
+
+				if (result == true) {
+					String msg = "Operação concluida com sucesso !\n"
+							+ "\nForam processadas "
+							+ control.getNumProcessedTrj() + " trajetórias.";
+					JOptionPane.showMessageDialog(frmStopsAndMoves, msg,
+							"Info", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					if (excepton != null) {
+						JOptionPane.showMessageDialog(frmStopsAndMoves,
+								"Falha no processamento. Exceção:\n" +
+								excepton.getMessage(), "Error",
+								JOptionPane.ERROR_MESSAGE);
+						excepton.printStackTrace();
+					}
+					else {
+						JOptionPane.showMessageDialog(frmStopsAndMoves,
+								"Falha no processamento", "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
 			
+			progressBar.setIndeterminate(false);
+			progressBar.setString("");
+			progressBar.setValue(0);
+
 			btnRun.setEnabled(true);
 			panelMovePoints.setEnabled(true);
 			panelRoI.setEnabled(true);
@@ -95,8 +135,12 @@ public class MainGUI implements PropertyChangeListener {
 			panelStops.setEnabled(true);
 			panelTrajectory.setEnabled(true);
 
-			// TODO Abrir janela informando o usuário do ocorrido
-			// TODO Resetar os loaders e savers pois não servem mais
+			panelMovePoints.reset();
+			panelRoI.reset();
+			panelMoves.reset();
+			panelRoIPts.reset();
+			panelStops.reset();
+			panelTrajectory.reset();
 		}
 
 	}
