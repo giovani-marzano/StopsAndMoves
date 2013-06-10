@@ -63,8 +63,10 @@ public class TrajectoryLoader {
 	}
 
 	public Instances getStructure() throws IOException {
-		if (pointsLoader != null) {
-			structure = pointsLoader.getStructure();
+		if (structure == null) {
+			if (pointsLoader != null) {
+				structure = pointsLoader.getStructure();
+			}
 		}
 		return structure;
 	}

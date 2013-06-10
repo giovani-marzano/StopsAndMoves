@@ -27,12 +27,12 @@ public class InstanceSamplePoint implements SamplePoint {
 
 	@Override
 	public double getLat() {
-		return instance.value(InstanceSamplePoint.INDEX_LON);
+		return instance.value(InstanceSamplePoint.INDEX_LAT);
 	}
 
 	@Override
 	public double getTime() {
-		return instance.value(InstanceSamplePoint.INDEX_LON);
+		return instance.value(InstanceSamplePoint.INDEX_TIME);
 	}
 
 }
