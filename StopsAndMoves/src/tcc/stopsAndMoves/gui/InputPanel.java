@@ -10,13 +10,17 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
+import weka.core.converters.DatabaseLoader;
 import weka.core.converters.Loader;
 import weka.gui.ConverterFileChooser;
+import weka.gui.sql.SqlViewerDialog;
 
 public class InputPanel extends JPanel {
 
@@ -35,6 +39,7 @@ public class InputPanel extends JPanel {
 	private String defaultFile = null;
 	private JButton btnArquivo;
 	private JButton btnSql;
+	private JFrame parentFrame = null;
 
 	/**
 	 * Create the panel.
@@ -57,9 +62,12 @@ public class InputPanel extends JPanel {
 		Component horizontalStrut = Box.createHorizontalStrut(5);
 		add(horizontalStrut);
 
-		btnSql = new JButton(
-				Messages.getString("InputPanel.btnSql.text")); //$NON-NLS-1$
-		btnSql.setEnabled(false);
+		btnSql = new JButton(Messages.getString("InputPanel.btnSql.text")); //$NON-NLS-1$
+		btnSql.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				createLoaderFromSQL();
+			}
+		});
 		add(btnSql);
 
 		Component horizontalStrut_1 = Box.createHorizontalStrut(5);
@@ -76,6 +84,37 @@ public class InputPanel extends JPanel {
 		lblOkIcon.setIcon(notOkIcon);
 		lblOkIcon.setHorizontalAlignment(SwingConstants.CENTER);
 		add(lblOkIcon);
+	}
+
+	private void createLoaderFromSQL() {
+		SqlViewerDialog dialog = new SqlViewerDialog(parentFrame);
+
+		dialog.setVisible(true);
+		if (dialog.getReturnValue() == JOptionPane.OK_OPTION) {
+			
+			String keys = null;
+			
+			keys = JOptionPane.showInputDialog(parentFrame,
+					"Forneça o nome das colunas que identificam unicamente\n" +
+					"os resultados da query separados por vírgula");
+			
+			try {
+				DatabaseLoader dbLoader = new DatabaseLoader();
+				dbLoader.setSource(dialog.getURL(), dialog.getUser(),
+						dialog.getPassword());
+				dbLoader.setQuery(dialog.getQuery());
+				
+				if (keys != null && keys.length() > 0) {
+					dbLoader.setKeys(keys);
+				}
+				setLoader(dbLoader);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(parentFrame, 
+						e.getMessage(),
+						"Falha na criação do Loader",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 
 	private void createLoaderFromFile() {
@@ -142,13 +181,21 @@ public class InputPanel extends JPanel {
 	public void setDefaultFile(String defaultFile) {
 		this.defaultFile = defaultFile;
 	}
-	
+
 	public void setEnabled(boolean enabled) {
 		btnArquivo.setEnabled(enabled);
-		// btnSql.setEnabled(enabled);
+		btnSql.setEnabled(enabled);
 	}
-	
+
 	public boolean isEnabled() {
 		return btnArquivo.isEnabled();
+	}
+
+	public JFrame getParentFrame() {
+		return parentFrame;
+	}
+
+	public void setParentFrame(JFrame parentFrame) {
+		this.parentFrame = parentFrame;
 	}
 }
