@@ -19,7 +19,7 @@ public interface SamplePoint {
 	
 	/**
 	 * 
-	 * @return Instante da amostra
+	 * @return Instante da amostra (em segundos)
 	 */
 	double getTime();
 }

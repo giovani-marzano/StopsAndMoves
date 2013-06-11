@@ -56,11 +56,12 @@ public class MovePointsSaver extends AbstractSaver {
 		for (SamplePoint sp : move.getPath()) {
 			values[INDEX_TID] = move.getTrajectory().getId();
 			values[INDEX_MID] = move.getId();
-			values[INDEX_TIME] = sp.getTime();
+			values[INDEX_TIME] = sp.getTime()*1000.0;
 			values[INDEX_LAT] = sp.getLat();
 			values[INDEX_LON] = sp.getLon();
 
 			Instance ins = new Instance(1, values);
+			ins.setDataset(getStructure());
 
 			saver.writeIncremental(ins);
 		}

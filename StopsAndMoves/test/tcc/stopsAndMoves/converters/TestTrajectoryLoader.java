@@ -46,7 +46,7 @@ public class TestTrajectoryLoader {
 				assertEquals(-2-tes, p.getLon(), 0.05);
 				tes += 0.1;
 				if ( time != 0 ) {
-					assertEquals(60000.0, p.getTime()-time, 0.5);
+					assertEquals(60.0, p.getTime()-time, 0.5);
 				}
 				time = p.getTime();
 			}
@@ -63,7 +63,7 @@ public class TestTrajectoryLoader {
 				assertEquals(-2-tes, p.getLon(), 0.05);
 				tes += 0.1;
 				if ( time != 0 ) {
-					assertEquals(60000.0, p.getTime()-time, 0.5);
+					assertEquals(60.0, p.getTime()-time, 0.5);
 				}
 				time = p.getTime();
 
@@ -81,7 +81,7 @@ public class TestTrajectoryLoader {
 				assertEquals(-2-tes, p.getLon(), 0.05);
 				tes += 0.1;
 				if ( time != 0 ) {
-					assertEquals(60000.0, p.getTime()-time, 0.5);
+					assertEquals(60.0, p.getTime()-time, 0.5);
 				}
 				time = p.getTime();
 			}

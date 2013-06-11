@@ -32,7 +32,6 @@ public class InstanceSamplePoint implements SamplePoint {
 
 	@Override
 	public double getTime() {
-		return instance.value(InstanceSamplePoint.INDEX_TIME);
+		return instance.value(InstanceSamplePoint.INDEX_TIME)/1000.0;
 	}
-
 }

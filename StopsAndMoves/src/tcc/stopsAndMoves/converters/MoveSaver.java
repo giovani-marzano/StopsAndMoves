@@ -80,6 +80,7 @@ public class MoveSaver extends AbstractSaver {
 		}
 
 		Instance ins = new Instance(1, values);
+		ins.setDataset(getStructure());
 
 		saver.writeIncremental(ins);
 

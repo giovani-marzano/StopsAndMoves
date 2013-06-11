@@ -60,6 +60,7 @@ public class StopSaver extends AbstractSaver {
 		values[INDEX_LEAVE_TIME] = stop.getLeaveTime();
 
 		Instance ins = new Instance(1, values);
+		ins.setDataset(getStructure());
 
 		saver.writeIncremental(ins);
 	}

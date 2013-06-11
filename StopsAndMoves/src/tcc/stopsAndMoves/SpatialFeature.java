@@ -21,7 +21,7 @@ public class SpatialFeature {
 
 	/**
 	 * Tempo minimo que uma trajetoria deve permaneceer nesta região de
-	 * interesse para se considerar que parou nesta região.
+	 * interesse para se considerar que parou nesta região. (em segundos)
 	 */
 	private double minimunTime;
 
