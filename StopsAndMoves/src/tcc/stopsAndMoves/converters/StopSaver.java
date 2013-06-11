@@ -56,8 +56,9 @@ public class StopSaver extends AbstractSaver {
 		values[INDEX_TID] = stop.getTrajectory().getId();
 		values[INDEX_SID] = stop.getId();
 		values[INDEX_SFID] = stop.getSpatialFeature().getId();
-		values[INDEX_ENTER_TIME] = stop.getEnterTime();
-		values[INDEX_LEAVE_TIME] = stop.getLeaveTime();
+		/* Os tempos são salvos em weka em milisegundos */
+		values[INDEX_ENTER_TIME] = stop.getEnterTime() * 1000.0;
+		values[INDEX_LEAVE_TIME] = stop.getLeaveTime() * 1000.0;
 
 		Instance ins = new Instance(1, values);
 		ins.setDataset(getStructure());
