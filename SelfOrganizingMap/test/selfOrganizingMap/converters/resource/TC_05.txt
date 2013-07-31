@@ -1,0 +1,4 @@
+# Arquivo de teste TC_05
+#
+0 hexa 3 4 gaussian
+

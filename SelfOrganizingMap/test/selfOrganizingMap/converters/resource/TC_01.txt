@@ -1,0 +1,24 @@
+# Arquivo de teste TC_01
+#
+  # Linha de cabecalho
+3 rect 4 3 bubble
+
+  # Linhas de dados
+#
+2.1  -3.2  5.5
+2.0  1.2  4.2
+8.2  8.1  -2.2
+1.4  -2.32 8.12
+
+# Proxima linha
+1.0  2.3  8.2  c1
+1.3  -2.4  8.1  c1  c2
+7.2  3.2  8.1  
+1.2  3.2  -7.7
+
+# Ultima linha
+3.3  2.2  1.1  c4
+2.2  -1.1  3.3  c4 c1
+1.1  6.6  -7.3  
+-2.3  4.4  2.1
+
