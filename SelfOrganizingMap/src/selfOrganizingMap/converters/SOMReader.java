@@ -19,7 +19,7 @@ public class SOMReader implements Closeable {
 	public static final int MAX_X_DIMENSION = 1000;
 	public static final int MIN_Y_DIMENSION = 1;
 	public static final int MAX_Y_DIMENSION = 1000;
-	
+
 	private BufferedReader reader = null;
 
 	private int lineNumber = 0;
@@ -130,8 +130,8 @@ public class SOMReader implements Closeable {
 
 		SOMGrid som = readHeader();
 
-		for (int x = 0; x < som.getNumCols(); x++) {
-			for (int y = 0; y < som.getNumLines(); y++) {
+		for (int y = 0; y < som.getNumLines(); y++) {
+			for (int x = 0; x < som.getNumCols(); x++) {
 				SOMCell cell = readCell(som.getVetDimension());
 
 				if (cell != null) {
