@@ -29,8 +29,18 @@ public class SOMReader implements Closeable {
 
 		while (line != null
 				&& (line.length() == 0 || line.charAt(0) == COMMENT_CHAR)) {
-			line = reader.readLine().trim();
+			line = reader.readLine();
+			if (line != null) {
+				line = line.trim();
+			}
 			lineNumber++;
+		}
+
+		if (line != null) {
+			// Tratando comentario fora da primeira
+			if (line.indexOf(COMMENT_CHAR) > 0) {
+				throw new IOException("Comment only allowed on first column");
+			}
 		}
 
 		return line;
@@ -74,10 +84,17 @@ public class SOMReader implements Closeable {
 		} catch (NumberFormatException e) {
 			throw new IOException("Invalid X dimension: line " + lineNumber);
 		}
+		if (dimX < 0) {
+			throw new IOException("Dimension X negative");
+		}
+
 		try {
 			dimY = Integer.valueOf(fields[3]);
 		} catch (NumberFormatException e) {
 			throw new IOException("Invalid Y dimension: line " + lineNumber);
+		}
+		if (dimY < 0) {
+			throw new IOException("Dimension Y negative");
 		}
 
 		try {
@@ -113,8 +130,17 @@ public class SOMReader implements Closeable {
 
 		fields = line.split(SPLIT_REGEXP);
 
-		for (int i = 0; i < dimension; i++) {
-			vet[i] = Double.valueOf(fields[i]);
+		if (fields.length < dimension) {
+			throw new IOException("Vector at line: " + lineNumber
+					+ " with less than " + dimension + " elements");
+		}
+
+		try {
+			for (int i = 0; i < dimension; i++) {
+				vet[i] = Double.valueOf(fields[i]);
+			}
+		} catch (NumberFormatException ex) {
+			throw new IOException("Bad number at line: " + lineNumber);
 		}
 
 		cell = new SOMCell();

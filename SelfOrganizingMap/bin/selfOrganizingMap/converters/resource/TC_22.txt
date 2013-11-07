@@ -1,6 +1,6 @@
 # Arquivo de teste TC_22
 #
-3 hexa 3 4 bubble
+3 hexa 3 4 xpto
 
 # Linhas de dados
 2.1  3.2  5.5

@@ -310,7 +310,7 @@ public class SOMReaderTest {
 	@Test
 	public void testTC_21() throws IOException {
 		thrown.expect(IOException.class);
-
+ 
 		SOMReader sr = getReaderFromResource("resource/TC_21.txt");
 
 		SOMGrid som = sr.readSOM();
