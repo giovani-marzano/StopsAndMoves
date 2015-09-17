@@ -1,2 +1,3 @@
 # Ignorando diretorio de saida # 
 bin/*
+/bin/
