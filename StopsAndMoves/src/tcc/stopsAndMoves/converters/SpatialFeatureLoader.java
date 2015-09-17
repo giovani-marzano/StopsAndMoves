@@ -93,7 +93,7 @@ public class SpatialFeatureLoader {
 		}
 	}
 	
-	private void loadRegions() throws IOException {
+	private void loadRegionsPoints() throws IOException {
 		if (regionPointsLoader == null) {
 			throw new IOException("SpatialFeature points Loader not defined");
 		}
@@ -144,9 +144,9 @@ public class SpatialFeatureLoader {
 	
 	public Set<SpatialFeature> getSpatialFeatures() throws IOException {
 		// Carrega as definiçoes das regiões
-		loadRegions();
-		// Carrega as áreas das regiões
 		loadSpatialFeatures();
+		// Carrega as áreas das regiões
+		loadRegionsPoints();
 		
 		Set<SpatialFeature> set = new HashSet<>(hashTab.values());
 		
