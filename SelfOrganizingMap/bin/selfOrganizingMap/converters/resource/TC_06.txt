@@ -1,3 +1,0 @@
-# Arquivo de teste TC_06
-#
-1100 hexa 3 4 gaussian

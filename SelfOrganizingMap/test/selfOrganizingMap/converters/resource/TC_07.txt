@@ -1,3 +1,0 @@
-# Arquivo de teste TC_07
-#
-xpto hexa 3 4 gaussian
