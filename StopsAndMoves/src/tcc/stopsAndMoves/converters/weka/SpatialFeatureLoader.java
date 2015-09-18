@@ -1,4 +1,4 @@
-package tcc.stopsAndMoves.converters;
+package tcc.stopsAndMoves.converters.weka;
 
 import java.awt.geom.Path2D;
 import java.io.IOException;

@@ -1,10 +1,11 @@
-package tcc.stopsAndMoves.converters;
+package tcc.stopsAndMoves.converters.weka;
 
 import java.io.IOException;
 
 import tcc.stopsAndMoves.Move;
 import tcc.stopsAndMoves.Stop;
 import tcc.stopsAndMoves.Trajectory;
+import tcc.stopsAndMoves.converters.ITrajectorySaver;
 import weka.core.converters.Saver;
 
 /**

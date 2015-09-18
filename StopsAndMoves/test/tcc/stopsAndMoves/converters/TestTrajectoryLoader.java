@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import tcc.stopsAndMoves.SamplePoint;
 import tcc.stopsAndMoves.Trajectory;
+import tcc.stopsAndMoves.converters.weka.TrajectoryLoader;
 import weka.core.converters.ArffLoader;
 
 public class TestTrajectoryLoader {

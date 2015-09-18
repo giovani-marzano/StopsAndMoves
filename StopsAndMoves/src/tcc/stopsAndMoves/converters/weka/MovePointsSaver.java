@@ -1,4 +1,4 @@
-package tcc.stopsAndMoves.converters;
+package tcc.stopsAndMoves.converters.weka;
 
 import java.io.IOException;
 

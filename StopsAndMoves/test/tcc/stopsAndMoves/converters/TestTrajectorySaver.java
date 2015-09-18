@@ -16,6 +16,7 @@ import tcc.stopsAndMoves.Path;
 import tcc.stopsAndMoves.SimplePoint;
 import tcc.stopsAndMoves.SpatialFeature;
 import tcc.stopsAndMoves.Trajectory;
+import tcc.stopsAndMoves.converters.weka.TrajectorySaver;
 import weka.core.converters.ArffSaver;
 
 public class TestTrajectorySaver {

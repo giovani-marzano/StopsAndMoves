@@ -7,9 +7,9 @@ import tcc.stopsAndMoves.Application;
 import tcc.stopsAndMoves.SMoT;
 import tcc.stopsAndMoves.SMoTException;
 import tcc.stopsAndMoves.SpatialFeature;
-import tcc.stopsAndMoves.converters.SpatialFeatureLoader;
-import tcc.stopsAndMoves.converters.TrajectoryLoader;
-import tcc.stopsAndMoves.converters.TrajectorySaver;
+import tcc.stopsAndMoves.converters.weka.SpatialFeatureLoader;
+import tcc.stopsAndMoves.converters.weka.TrajectoryLoader;
+import tcc.stopsAndMoves.converters.weka.TrajectorySaver;
 import weka.core.converters.Loader;
 import weka.core.converters.Saver;
 

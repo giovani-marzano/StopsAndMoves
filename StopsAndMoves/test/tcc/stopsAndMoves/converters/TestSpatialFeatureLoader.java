@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import tcc.stopsAndMoves.SimplePoint;
 import tcc.stopsAndMoves.SpatialFeature;
+import tcc.stopsAndMoves.converters.weka.SpatialFeatureLoader;
 import weka.core.converters.ArffLoader;
 
 public class TestSpatialFeatureLoader {
