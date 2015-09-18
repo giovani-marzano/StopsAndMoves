@@ -87,7 +87,7 @@ public class SMoTControl {
 		
 		if ( !hasNext ) {
 			// Acabou o processamento. Escrevendo null no Saver para fechar os arquivos
-			trjSaver.writeIncremental(null);
+			trjSaver.writeStopsAndMoves(null);
 		}
 		
 		return hasNext;

@@ -23,7 +23,7 @@ public class TrajectorySaver implements ITrajectorySaver {
 	 * @see tcc.stopsAndMoves.converters.ITrajectorySaver#writeIncremental(tcc.stopsAndMoves.Trajectory)
 	 */
 	@Override
-	public void writeIncremental(Trajectory trj) throws IOException {
+	public void writeStopsAndMoves(Trajectory trj) throws IOException {
 		if (moveSaver != null) {
 			if (trj == null) {
 				moveSaver.writeIncremental(null);

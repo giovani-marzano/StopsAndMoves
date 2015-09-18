@@ -31,7 +31,7 @@ public class SMoT {
 		if (trj != null) {
 			processTrajectory(trj);
 			
-			trajectoySaver.writeIncremental(trj);
+			trajectoySaver.writeStopsAndMoves(trj);
 			numProcessedTrajectories++;
 			return true;
 		}

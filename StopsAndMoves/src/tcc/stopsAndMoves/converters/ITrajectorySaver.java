@@ -15,6 +15,6 @@ public interface ITrajectorySaver {
 	 * @param trj
 	 * @throws IOException
 	 */
-	void writeIncremental(Trajectory trj) throws IOException;
+	void writeStopsAndMoves(Trajectory trj) throws IOException;
 
 }
