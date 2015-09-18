@@ -81,16 +81,16 @@ public class TestTrajectorySaver {
 	
 	@Test
 	public void noStopsOrMoves() throws IOException {
-		trajectorySaver.writeIncremental(trj);
-		trajectorySaver.writeIncremental(null);
+		trajectorySaver.writeStopsAndMoves(trj);
+		trajectorySaver.writeStopsAndMoves(null);
 		System.out.println(moveFile.getPath());
 	}
 	
 	@Test
 	public void justOneMove() throws IOException {
 		trj.addMove(trj);
-		trajectorySaver.writeIncremental(trj);
-		trajectorySaver.writeIncremental(null);
+		trajectorySaver.writeStopsAndMoves(trj);
+		trajectorySaver.writeStopsAndMoves(null);
 		
 		System.out.println(moveFile.getPath());
 	}
@@ -98,8 +98,8 @@ public class TestTrajectorySaver {
 	@Test
 	public void justOneStop() throws IOException {
 		trj.addStop(trj, spList.get(0));
-		trajectorySaver.writeIncremental(trj);
-		trajectorySaver.writeIncremental(null);
+		trajectorySaver.writeStopsAndMoves(trj);
+		trajectorySaver.writeStopsAndMoves(null);
 		System.out.println(moveFile.getPath());
 	}
 	
@@ -108,8 +108,8 @@ public class TestTrajectorySaver {
 		trj.addMove(new Path(trj.subList(0, 30)));
 		trj.addStop(new Path(trj.subList(30, 60)), spList.get(0));
 		trj.addMove(new Path(trj.subList(60, 100)));
-		trajectorySaver.writeIncremental(trj);
-		trajectorySaver.writeIncremental(null);
+		trajectorySaver.writeStopsAndMoves(trj);
+		trajectorySaver.writeStopsAndMoves(null);
 		System.out.println(moveFile.getPath());
 	}
 	
@@ -118,8 +118,8 @@ public class TestTrajectorySaver {
 		trj.addStop(new Path(trj.subList(0, 30)), spList.get(0));
 		trj.addMove(new Path(trj.subList(30, 60)));
 		trj.addStop(new Path(trj.subList(60, 100)), spList.get(1));
-		trajectorySaver.writeIncremental(trj);
-		trajectorySaver.writeIncremental(null);
+		trajectorySaver.writeStopsAndMoves(trj);
+		trajectorySaver.writeStopsAndMoves(null);
 		System.out.println(moveFile.getPath());
 	}
 }

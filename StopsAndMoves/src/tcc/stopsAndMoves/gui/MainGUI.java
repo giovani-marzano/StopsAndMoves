@@ -18,7 +18,10 @@ import javax.swing.Box;
 import javax.swing.JProgressBar;
 import javax.swing.border.EmptyBorder;
 
+import tcc.stopsAndMoves.Application;
+import tcc.stopsAndMoves.SMoT;
 import tcc.stopsAndMoves.control.SMoTControl;
+import tcc.stopsAndMoves.converters.sql.TrajectorySql;
 import weka.gui.ConverterFileChooser;
 
 import java.awt.event.ActionListener;
@@ -68,6 +71,46 @@ public class MainGUI implements PropertyChangeListener {
 
 		@Override
 		protected Boolean doInBackground() {
+			if (false) {
+				return doWekaProcessing();
+			}
+			else {
+				return doSQLProcessing();
+			}
+		}
+		
+		private boolean doSQLProcessing() {
+			boolean result = true;
+
+			try {
+				boolean hasNext = true;
+				
+				TrajectorySql loaderSaver = new TrajectorySql();
+				
+				loaderSaver.setUserName("giovani");
+				loaderSaver.setPassword("giovani123");
+				loaderSaver.setDatabaseURL("jdbc:postgresql://localhost:5432/trajetoriasgis");
+				
+				Application app = loaderSaver.loadApplication();
+				
+				SMoT control = new SMoT();
+				
+				control.setApplication(app);
+				control.setTrajectoryLoader(loaderSaver);
+				control.setTrajectoySaver(loaderSaver);
+
+				while (hasNext == true) {
+					hasNext = control.processSome(10);
+					setProgress(control.getNumProcessedTrajectories() % 100);
+				}
+			} catch (Exception e) {
+				excepton = e;
+				result = false;
+			}
+			return result;
+		}
+				
+		private boolean doWekaProcessing() {
 			boolean result = true;
 
 			try {
