@@ -17,7 +17,7 @@ import weka.core.converters.Loader;
  * @author giovani
  * 
  */
-public class TrajectoryLoader {
+public class TrajectoryLoader implements ITrajectoryLoader {
 	private Loader pointsLoader = null;
 
 	private Instances structure = null;
@@ -33,13 +33,10 @@ public class TrajectoryLoader {
 		}
 	}
 
-	/**
-	 * 
-	 * @return A próxima trajetória ou null se não existem mais trajetórias a
-	 *         serem lidas
-	 * @throws IOException
-	 *             Se ocorrer algum erro durante o processamento.
+	/* (non-Javadoc)
+	 * @see tcc.stopsAndMoves.converters.ITrajectoryLoader#getNextTrajectory()
 	 */
+	@Override
 	public Trajectory getNextTrajectory() throws IOException {
 		Trajectory trj = null;
 		long tID = 0;

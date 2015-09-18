@@ -2,6 +2,13 @@ package tcc.stopsAndMoves;
 
 import java.util.Set;
 
+/**
+ * Here an Application means a collection of spatial features that are
+ * relevant for a particular analysis (application of the algorithm).
+ * 
+ * @author Giovani Marzano
+ *
+ */
 public class Application {
 	private Set<SpatialFeature> regionSet;
 	private double minTime;

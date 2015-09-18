@@ -2,8 +2,8 @@ package tcc.stopsAndMoves;
 
 import java.io.IOException;
 
-import tcc.stopsAndMoves.converters.TrajectoryLoader;
-import tcc.stopsAndMoves.converters.TrajectorySaver;
+import tcc.stopsAndMoves.converters.ITrajectoryLoader;
+import tcc.stopsAndMoves.converters.ITrajectorySaver;
 
 /**
  * Implementação do algoritmo Stops and Moves on Trajectories (SMoT).
@@ -18,8 +18,8 @@ import tcc.stopsAndMoves.converters.TrajectorySaver;
 public class SMoT {
 	
 	private Application application;
-	private TrajectorySaver trajectoySaver;
-	private TrajectoryLoader trajectoryLoader;
+	private ITrajectorySaver trajectoySaver;
+	private ITrajectoryLoader trajectoryLoader;
 	
 	private int numProcessedTrajectories = 0;
 
@@ -149,19 +149,19 @@ public class SMoT {
 		trj.addMove(path);
 	}
 
-	public TrajectorySaver getTrajectoySaver() {
+	public ITrajectorySaver getTrajectoySaver() {
 		return trajectoySaver;
 	}
 
-	public void setTrajectoySaver(TrajectorySaver trajectoySaver) {
+	public void setTrajectoySaver(ITrajectorySaver trajectoySaver) {
 		this.trajectoySaver = trajectoySaver;
 	}
 
-	public TrajectoryLoader getTrajectoryLoader() {
+	public ITrajectoryLoader getTrajectoryLoader() {
 		return trajectoryLoader;
 	}
 
-	public void setTrajectoryLoader(TrajectoryLoader trajectoryLoader) {
+	public void setTrajectoryLoader(ITrajectoryLoader trajectoryLoader) {
 		this.trajectoryLoader = trajectoryLoader;
 	}
 

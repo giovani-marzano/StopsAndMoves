@@ -14,10 +14,14 @@ import weka.core.converters.Saver;
  * @author giovani
  * 
  */
-public class TrajectorySaver {
+public class TrajectorySaver implements ITrajectorySaver {
 	private MoveSaver moveSaver = null;
 	private StopSaver stopSaver = null;
 
+	/* (non-Javadoc)
+	 * @see tcc.stopsAndMoves.converters.ITrajectorySaver#writeIncremental(tcc.stopsAndMoves.Trajectory)
+	 */
+	@Override
 	public void writeIncremental(Trajectory trj) throws IOException {
 		if (moveSaver != null) {
 			if (trj == null) {
