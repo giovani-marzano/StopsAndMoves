@@ -6,5 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="C:/Program Files (x86)/PostgreSQL/pgJDBC/postgresql-9.4-1202.jdbc41.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Weka 3.6"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=StopsAndMoves&amp;ivyXmlPath=ivy.xml&amp;confs=*"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

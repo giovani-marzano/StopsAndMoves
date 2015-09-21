@@ -2,13 +2,15 @@ package tcc.stopsAndMoves;
 
 import static org.junit.Assert.assertEquals;
 
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.util.GeometricShapeFactory;
 
 public class TestSMoTProcessTrajectory {
 
@@ -59,8 +61,11 @@ public class TestSMoTProcessTrajectory {
 		 * trajetória.
 		 */
 		Set<SpatialFeature> set = new HashSet<>();
-		Rectangle area = new Rectangle();
-		area.setRect(-0.5, -0.5, 110, 2);
+		GeometricShapeFactory shapeFact = new GeometricShapeFactory();
+		shapeFact.setBase(new Coordinate(-0.5,-0.5));
+		shapeFact.setWidth(110);
+		shapeFact.setHeight(2);
+		Polygon area = shapeFact.createRectangle();
 		SpatialFeature sp = new SpatialFeature(1, area, 2);
 		set.add(sp);
 		Application app = new Application(set);
@@ -77,14 +82,20 @@ public class TestSMoTProcessTrajectory {
 	@Test
 	public void testStopMoveStop() {
 		Set<SpatialFeature> set = new HashSet<>();
-		Rectangle2D.Double area = new Rectangle2D.Double();
 
-		area.setRect(-0.5, -0.5, 11, 2);
+		GeometricShapeFactory shapeFact = new GeometricShapeFactory();
+		shapeFact.setBase(new Coordinate(-0.5,-0.5));
+		shapeFact.setWidth(11);
+		shapeFact.setHeight(2);
+		Polygon area = shapeFact.createRectangle();
 		SpatialFeature sp = new SpatialFeature(1, area, 2);
 		set.add(sp);
 
-		area = new Rectangle2D.Double();
-		area.setRect(89.5, -0.5, 11, 2);
+		shapeFact.setBase(new Coordinate(89.5,-0.5));
+		shapeFact.setWidth(11);
+		shapeFact.setHeight(2);
+		area = shapeFact.createRectangle();
+
 		sp = new SpatialFeature(2, area, 2);
 		set.add(sp);
 
@@ -114,9 +125,13 @@ public class TestSMoTProcessTrajectory {
 	@Test
 	public void testMoveStopMove() {
 		Set<SpatialFeature> set = new HashSet<>();
-		Rectangle2D.Double area = new Rectangle2D.Double();
 
-		area.setRect(10.5, -0.5, 79, 2);
+		GeometricShapeFactory shapeFact = new GeometricShapeFactory();
+		shapeFact.setBase(new Coordinate(10.5,-0.5));
+		shapeFact.setWidth(79);
+		shapeFact.setHeight(2);
+		Polygon area = shapeFact.createRectangle();
+
 		SpatialFeature sp = new SpatialFeature(1, area, 2);
 		set.add(sp);
 

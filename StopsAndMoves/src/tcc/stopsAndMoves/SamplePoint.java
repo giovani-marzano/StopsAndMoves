@@ -1,21 +1,22 @@
 package tcc.stopsAndMoves;
 
+import com.vividsolutions.jts.geom.Point;
+
 /**
  * Representa uma amostra de uma trajetória.
  * @author giovani
  *
  */
 public interface SamplePoint {
-	/**
-	 * @return Longitude da amostra
+	/***
+	 * Posição da amostra
+	 * @return
 	 */
-	double getLon();
+	Point getPos();
 	
-	/**
-	 * 
-	 * @return Latitude da amostra
-	 */
 	double getLat();
+	
+	double getLon();
 	
 	/**
 	 * 

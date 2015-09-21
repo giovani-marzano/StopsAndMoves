@@ -1,6 +1,6 @@
 package tcc.stopsAndMoves;
 
-import java.awt.Shape;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Regiao de interesse.
@@ -17,7 +17,7 @@ public class SpatialFeature {
 	/**
 	 * Definição da área coberta pela regiao de interesse
 	 */
-	private Shape area;
+	private Polygon area;
 
 	/**
 	 * Tempo minimo que uma trajetoria deve permanecer nesta região de
@@ -29,7 +29,7 @@ public class SpatialFeature {
 		this(id, null, 0);
 	}
 
-	public SpatialFeature(long id, Shape area, double minimunTime) {
+	public SpatialFeature(long id, Polygon area, double minimunTime) {
 		super();
 		this.id = id;
 		this.area = area;
@@ -40,15 +40,15 @@ public class SpatialFeature {
 		if (getArea() == null) {
 			return false;
 		} else {
-			return getArea().contains(p.getLon(), p.getLat());
+			return getArea().contains(p.getPos());
 		}
 	}
 
-	public Shape getArea() {
+	public Polygon getArea() {
 		return area;
 	}
 
-	public void setArea(Shape area) {
+	public void setArea(Polygon area) {
 		this.area = area;
 	}
 

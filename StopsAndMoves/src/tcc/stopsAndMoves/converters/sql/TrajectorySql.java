@@ -1,6 +1,5 @@
 package tcc.stopsAndMoves.converters.sql;
 
-import java.awt.geom.Path2D;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,9 +16,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
+
 import tcc.stopsAndMoves.Application;
 import tcc.stopsAndMoves.Move;
 import tcc.stopsAndMoves.SamplePoint;
+import tcc.stopsAndMoves.SimplePoint;
 import tcc.stopsAndMoves.SpatialFeature;
 import tcc.stopsAndMoves.Stop;
 import tcc.stopsAndMoves.Trajectory;
@@ -82,19 +87,16 @@ public class TrajectorySql implements ITrajectoryLoader, ITrajectorySaver {
 
 	public final String TID_COL = "tid";
 	public final String TIME_COL = "time";
-	public final String LATI_COL = "lat";
-	public final String LONG_COL = "lon";
+	public final String GEOM_COL = "geom";
 	public final String SFID_COL = "sfid";
 	public final String SFTIME_COL = "time";
+	public final String SFGEOM_COL = "geom";
 	public final String SFPTIDX_COL = "ptidx";
 
 	// Consultas SQL para carregar os dados necessários.
-	private String trajectoryPointsQuery = "SELECT tid, timestmp as time, ST_Y(the_geom) as lat, ST_X(the_geom) as lon"
+	private String trajectoryPointsQuery = "SELECT tid, timestmp as time, ST_AsText(the_geom) as geom"
 			+ " FROM trajetoria ORDER BY tid, time";
-	private String spatialFeaturesQuery = "select gid as sfid, 120 as time from regiao";
-	private String spatialFeaturePointsQuery = "select gid as sfid, (reg).dp.path[2] as ptidx"
-			+ ", ST_Y((reg).dp.geom) as lat, ST_X((reg).dp.geom) as lon"
-			+ " from (select gid, ST_DumpPoints(the_geom) as dp" + " from regiao) as reg ORDER BY sfid, ptidx";
+	private String spatialFeaturesQuery = "select gid as sfid, 120 as time, ST_AsText(the_geom) as geom from regiao";
 
 	// Comandos SQL para a gravação dos dados gerados
 	private String stopsCmd = "INSERT INTO stop (tid, sid, sfid, intime, outtime)" + " VALUES (?,?,?,?,?)";
@@ -194,6 +196,9 @@ public class TrajectorySql implements ITrajectoryLoader, ITrajectorySaver {
 			} catch (SQLException ex) {
 				System.out.println(ex.toString());
 				throw new IOException(ex);
+			} catch (ParseException ex) {
+				System.out.println(ex.toString());
+				throw new IOException(ex);
 			}
 		}
 
@@ -204,11 +209,13 @@ public class TrajectorySql implements ITrajectoryLoader, ITrajectorySaver {
 		}
 	}
 
-	private Iterator<Trajectory> loadTrajectories() throws SQLException {
+	private Iterator<Trajectory> loadTrajectories() throws SQLException, ParseException {
 		Connection conn = this.getConnection();
 
 		trajectories = new ArrayList<>();
 		Trajectory trj = null;
+		
+		WKTReader wktr = new WKTReader();
 
 		try (Statement stm = conn.createStatement();) {
 			ResultSet rs = stm.executeQuery(trajectoryPointsQuery);
@@ -221,10 +228,9 @@ public class TrajectorySql implements ITrajectoryLoader, ITrajectorySaver {
 				}
 
 				Timestamp time = rs.getTimestamp(TIME_COL);
-				double lat = rs.getDouble(LATI_COL);
-				double lon = rs.getDouble(LONG_COL);
+				String geom = rs.getString(GEOM_COL);
 
-				SQLSamplePoint pt = new SQLSamplePoint(lat, lon, time);
+				SimplePoint pt = new SimplePoint((Point) wktr.read(geom), time.getTime()/1000.0);
 				trj.add(pt);
 			}
 		}
@@ -234,7 +240,7 @@ public class TrajectorySql implements ITrajectoryLoader, ITrajectorySaver {
 		return trajectories.iterator();
 	}
 
-	private void loadSpatialFeatures() throws SQLException {
+	private void loadSpatialFeatures() throws SQLException, ParseException {
 		Connection conn = this.getConnection();
 
 		regionSet = new HashMap<Long, SpatialFeature>();
@@ -244,71 +250,20 @@ public class TrajectorySql implements ITrajectoryLoader, ITrajectorySaver {
 			while (rs.next()) {
 				long sfid = rs.getLong(SFID_COL);
 				double time = rs.getDouble(SFTIME_COL);
+				String geom = rs.getString(SFGEOM_COL);
 
 				SpatialFeature sf = new SpatialFeature(sfid);
+				WKTReader wktr = new WKTReader();
+				sf.setArea( (Polygon) wktr.read(geom));
 				sf.setMinimunTime(time);
 				regionSet.put(sf.getId(), sf);
 			}
 		}
 
-		loadSpatialFeaturesPoints(conn);
-
 		conn.close();
 	}
 
-	/*
-	 * TODO: Esta função é praticamente uma cópia de
-	 * tcc.stopsAndMoves.converters.weka.SpatialFeatureLoader.loadRegionsPoints(
-	 * ). Pensar em uma forma de generalizar o procedimento de carregar as
-	 * spatial features para evitar a repetição de código.
-	 */
-
-	private void loadSpatialFeaturesPoints(Connection conn) throws SQLException {
-		try (Statement stm = conn.createStatement();) {
-			ResultSet rs = stm.executeQuery(spatialFeaturePointsQuery);
-
-			Path2D.Double polygon = null;
-			long lastID = Long.MIN_VALUE;
-			while (rs.next()) {
-				long id = 0;
-				double lat, lon;
-
-				id = rs.getLong(SFID_COL);
-				lat = rs.getDouble(LATI_COL);
-				lon = rs.getDouble(LONG_COL);
-
-				if (id != lastID) {
-					if (polygon != null) {
-						// Fecha poligono anterior
-						polygon.closePath();
-
-						SpatialFeature sp = regionSet.get(lastID);
-						if (sp != null)
-							sp.setArea(polygon);
-					}
-
-					// Primeiro ponto do poligono
-					polygon = new Path2D.Double();
-					polygon.moveTo(lon, lat);
-					lastID = id;
-				} else {
-					// Ponto que continua poligono anterior
-					polygon.lineTo(lon, lat);
-				}
-			}
-
-			// Fechando o ultimo poligono
-			if (polygon != null) {
-				polygon.closePath();
-
-				SpatialFeature sp = regionSet.get(lastID);
-				if (sp != null)
-					sp.setArea(polygon);
-			}
-		}
-	}
-
-	public Application loadApplication() throws SQLException {
+	public Application loadApplication() throws SQLException, ParseException {
 		loadSpatialFeatures();
 
 		return new Application(new HashSet<>(regionSet.values()));

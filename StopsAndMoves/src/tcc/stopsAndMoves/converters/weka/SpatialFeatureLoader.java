@@ -1,11 +1,15 @@
 package tcc.stopsAndMoves.converters.weka;
 
-import java.awt.geom.Path2D;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateList;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
 
 import tcc.stopsAndMoves.SpatialFeature;
 import weka.core.Instance;
@@ -101,42 +105,43 @@ public class SpatialFeatureLoader {
 		Instances inst = regionPointsLoader.getDataSet();
 		Enumeration<?> en = inst.enumerateInstances();
 		
-		Path2D.Double polygon = null;
+		GeometryFactory geoFact = new GeometryFactory();
+		
 		long lastID = Long.MIN_VALUE;
 		
+		CoordinateList coordList = new CoordinateList();
 		while (en.hasMoreElements()) {
 			Instance pointInst = (Instance) en.nextElement();
 			long id = 0;
-			double lat, lon;
+			double lat,lon;
 			
 			id = (long) pointInst.value(INDEX_SPID);
 			lat = pointInst.value(INDEX_LAT);
 			lon = pointInst.value(INDEX_LON);
 			
 			if (id != lastID) {
-				if (polygon != null) {
-					// Fecha poligono anterior
-					polygon.closePath();
+				if (!coordList.isEmpty()) {
+					coordList.closeRing();
 					
+					Polygon polygon = geoFact.createPolygon(coordList.toCoordinateArray());
 					SpatialFeature sp = getSpatialFeature(lastID);
 					sp.setArea(polygon);
 				}
 				
 				// Primeiro ponto do poligono
-				polygon = new Path2D.Double();
-				polygon.moveTo(lon, lat);
+				coordList.clear();
 				lastID = id;
 			}
-			else {
-				// Ponto que continua poligono anterior
-				polygon.lineTo(lon, lat);
-			}
+			
+			// Ponto que continua poligono anterior
+			coordList.add(new Coordinate(lon,lat), false);
 		}
 		
 		// Fechando o ultimo poligono
-		if ( polygon != null ) {
-			polygon.closePath();
+		if ( !coordList.isEmpty() ) {
+			coordList.closeRing();
 			
+			Polygon polygon = geoFact.createPolygon(coordList.toCoordinateArray());
 			SpatialFeature sp = getSpatialFeature(lastID);
 			sp.setArea(polygon);
 		}

@@ -40,7 +40,7 @@ public class TestSpatialFeatureLoader {
 
 		// Pontos contidos nas regiões do arquivo
 		SimplePoint pR1 = new SimplePoint(12, 12, 20);
-		SimplePoint pR2 = new SimplePoint(25, 25, 20);
+		SimplePoint pR2 = new SimplePoint(30, 25, 20);
 		SimplePoint pR3 = new SimplePoint(52, 52, 20);
 
 		try {
